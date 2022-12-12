@@ -33,7 +33,11 @@ async function main() {
     [0]
   );
 
-  console.log(maxSum(reduced));
+  reduced.sort((a, b) => b - a);
+
+  const top3 = reduced.slice(0, 3).reduce((prev, x) => prev + x, 0);
+
+  console.log(top3);
 }
 
 main();
