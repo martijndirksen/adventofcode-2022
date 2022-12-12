@@ -108,6 +108,8 @@ class ComputingRockPaperScissorsGame implements RockPaperScissorsGame {
   }
 
   get score(): number {
+    // By simulating the different possible games we can easily determine the correct score
+    // Additionally, we re-use existing logic for determining the outcome
     for (const myShape of [Shape.Rock, Shape.Paper, Shape.Scissors]) {
       const game = new StandardRockPaperScissorsGame(
         this.opponentShape,
