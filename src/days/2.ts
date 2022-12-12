@@ -24,7 +24,17 @@ const myMapping: Record<string, Shape> = {
   Z: Shape.Scissors,
 };
 
-class RockPaperScissorsGame {
+const intendedResultMapping: Record<string, GameResult> = {
+  X: GameResult.Lose,
+  Y: GameResult.Draw,
+  Z: GameResult.Win,
+};
+
+interface RockPaperScissorsGame {
+  score: number;
+}
+
+class StandardRockPaperScissorsGame implements RockPaperScissorsGame {
   private readonly opponentShape: Shape;
   private readonly myShape: Shape;
 
@@ -65,7 +75,9 @@ class RockPaperScissorsGame {
   }
 
   get gameResult(): GameResult {
-    return RockPaperScissorsGame.outcomes[this.myShape][this.opponentShape];
+    return StandardRockPaperScissorsGame.outcomes[this.myShape][
+      this.opponentShape
+    ];
   }
 
   private get gameScore(): number {
@@ -86,14 +98,46 @@ class RockPaperScissorsGame {
   }
 }
 
+class ComputingRockPaperScissorsGame implements RockPaperScissorsGame {
+  private readonly opponentShape: Shape;
+  private readonly intendedGameResult: GameResult;
+
+  constructor(opponentShape: Shape, intendedResult: GameResult) {
+    this.opponentShape = opponentShape;
+    this.intendedGameResult = intendedResult;
+  }
+
+  get score(): number {
+    for (const myShape of [Shape.Rock, Shape.Paper, Shape.Scissors]) {
+      const game = new StandardRockPaperScissorsGame(
+        this.opponentShape,
+        myShape
+      );
+
+      if (game.gameResult === this.intendedGameResult) return game.score;
+    }
+
+    throw new Error('Could not determine score of intended outcome');
+  }
+}
+
 async function main() {
   const lines = await readLinesFromTextFile('2.txt');
 
+  // Part A:
+  // const games = lines.map((x) => {
+  //   const [opponentKey, myKey] = x.split(' ');
+  //   return new StandardRockPaperScissorsGame(
+  //     opponentMapping[opponentKey],
+  //     myMapping[myKey]
+  //   );
+  // });
+
   const games = lines.map((x) => {
     const [opponentKey, myKey] = x.split(' ');
-    return new RockPaperScissorsGame(
+    return new ComputingRockPaperScissorsGame(
       opponentMapping[opponentKey],
-      myMapping[myKey]
+      intendedResultMapping[myKey]
     );
   });
 

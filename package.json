@@ -16,8 +16,8 @@
   },
   "scripts": {
     "lint": "eslint . --cache",
-    "day:1": "ts-node --project tsconfig.json ./src/days/1/index.ts",
-    "day:2": "ts-node --project tsconfig.json ./src/days/2/index.ts"
+    "day:1": "ts-node --project tsconfig.json ./src/days/1.ts",
+    "day:2": "ts-node --project tsconfig.json ./src/days/2.ts"
   },
   "repository": {
     "type": "git",
