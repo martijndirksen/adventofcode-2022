@@ -21,6 +21,22 @@ function splitIntoChunks(input: string, count: number): string[] {
   return chunks;
 }
 
+function chunk<T>(input: T[], chunkSize: number): T[][] {
+  if (chunkSize < 1)
+    throw new Error('Chunk size must be larger than or equal to 1');
+  if (!input?.length) return [];
+
+  let i = 0;
+  let j = 0;
+  const result = [];
+
+  while (i < input.length) {
+    result[j++] = input.slice(i, (i += chunkSize));
+  }
+
+  return result;
+}
+
 function getPriority(input: string) {
   if (!input) throw new Error('Input cannot be empty');
   if (input.length > 1)
@@ -52,12 +68,23 @@ async function main() {
 
   // Part A:
   // const sum = lines
-  //   .map((x) => splitIntoChunks(x, CHUNK_COUNT).map((x) => new Set(x)))
+  //   .map((x) => splitIntoNChunks(x, CHUNK_COUNT).map((x) => new Set(x)))
   //   .map((x) =>
   //     [...intersect(...x)].reduce((acc, y) => acc + getPriority(y), 0)
   //   )
   //   .reduce((acc, x) => acc + x, 0);
   // console.log(sum);
+
+  const sum = chunk(lines, 3)
+    .map((x) =>
+      [...intersect<string>(...x.map((y) => new Set(y)))].reduce(
+        (acc, y) => acc + getPriority(y),
+        0
+      )
+    )
+    .reduce((acc, x) => acc + x, 0);
+
+  console.log(sum);
 }
 
 main();
