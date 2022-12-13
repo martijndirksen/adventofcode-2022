@@ -15,8 +15,11 @@ class Range {
     return this.min >= range.min && this.max <= range.max;
   }
 
-  public isContainedInRanges(...ranges: Range[]): boolean {
-    return ranges.some((x) => this.isContainedInRange(x));
+  public isOverlapping(range: Range): boolean {
+    return (
+      (this.min >= range.min && this.min <= range.max) ||
+      (this.max >= range.min && this.max <= range.max)
+    );
   }
 }
 
@@ -37,6 +40,18 @@ function someRangeIsContainedByOthers(pair: Range[]): boolean {
   return false;
 }
 
+function someRangeIsOverlappingWithOthers(pair: Range[]): boolean {
+  for (let i = 0; i < pair.length; i++) {
+    for (let j = 0; j < pair.length; j++) {
+      if (i === j) continue;
+      if (pair[i].isOverlapping(pair[j]) || pair[j].isOverlapping(pair[i])) {
+        return true;
+      }
+    }
+  }
+  return false;
+}
+
 async function main() {
   const lines = await readLinesFromTextFile('4.txt');
 
@@ -45,7 +60,10 @@ async function main() {
 
   for (const pair of pairs) {
     if (pair.length < 2) continue;
-    if (someRangeIsContainedByOthers(pair)) count++;
+
+    // Part A:
+    //if (someRangeIsContainedByOthers(pair)) count++;
+    if (someRangeIsOverlappingWithOthers(pair)) count++;
   }
 
   console.log(count);
