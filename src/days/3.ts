@@ -84,6 +84,7 @@ async function main() {
     )
     .reduce((acc, x) => acc + x, 0);
 
+  // I guess this was a challenge of how many maps and reduces i can write in a single file...
   console.log(sum);
 }
 
